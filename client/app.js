@@ -4,6 +4,8 @@
 
 initalTaskId =0;
 lastFocus =null;
+endpoint = "http://localhost:8080/taskTracker/v1/";
+taskPostEndpoint = endpoint+"task";
 
 function editTaskText(keyCode, existing) {
     switch(keyCode){
@@ -20,6 +22,23 @@ function editTaskText(keyCode, existing) {
     }
 
 }
+function asyncSave(lastFocus) {
+
+    var data = {};
+    data.taskText = lastFocus.context.innerText;
+
+    $.ajax({
+        type: 'POST',
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        url: taskPostEndpoint,
+        success: function(data) {
+            console.log('success');
+            console.log(JSON.stringify(data));
+        }
+    });
+}
+
 jQuery(function($){
     $(document).ready(function(){
 
@@ -31,6 +50,15 @@ jQuery(function($){
             }
 
         });
+
+        $('#saveTask').click(function(){
+
+            if(lastFocus!=null){
+                asyncSave(lastFocus);
+            }
+
+        });
+
 
         $('#addTask').click(function() {
             $('body').append("<div tabindex=\"-1\" class=\"task\" id=\"task"+ ++initalTaskId + "\"></div>");
@@ -47,6 +75,7 @@ jQuery(function($){
             $(newTaskId).on("focus", function(){
                 lastFocus = $(this);
                 $('#deleteTask').removeAttr("disabled");
+                $('#saveTask').removeAttr("disabled");
             });
 
             /*$(newTaskId).on("focusout", function(){
