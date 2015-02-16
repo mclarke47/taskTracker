@@ -6,6 +6,7 @@ initalTaskId =0;
 lastFocus =null;
 endpoint = "http://localhost:8080/taskTracker/v1/";
 taskPostEndpoint = endpoint+"task";
+taskListGetEndpoint = endpoint+"me/tasks";
 
 function editTaskText(keyCode, existing) {
     switch(keyCode){
@@ -22,7 +23,7 @@ function editTaskText(keyCode, existing) {
     }
 
 }
-function asyncSave(lastFocus) {
+function postTask(lastFocus) {
 
     var data = {};
     data.taskText = lastFocus.context.innerText;
@@ -35,11 +36,57 @@ function asyncSave(lastFocus) {
         success: function(data) {
             console.log('success');
             console.log(JSON.stringify(data));
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            console.log(XMLHttpRequest.responseText);
         }
     });
 }
 
-jQuery(function($){
+function getMyTasks() {
+
+    $.ajax({
+        type: 'GET',
+        contentType: 'application/json',
+        url: taskListGetEndpoint,
+        success: function(data) {
+            console.log('success');
+            console.log(JSON.stringify(data));
+            JSON.parse(data).forEach(function(entry) {
+                addTask(entry.taskText);
+            });
+
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            console.log(XMLHttpRequest.responseText);
+        }
+    });
+
+}
+
+function addTask(text) {
+    $('body').append("<div tabindex=\"-1\" class=\"task\" id=\"task"+ ++initalTaskId + "\"></div>");
+
+    //Add events to task
+    var newTaskId = "#task"+initalTaskId;
+    $(newTaskId).on("click", function(){
+        $(this).focus();
+    });
+
+    $(newTaskId).draggable();
+
+    $(newTaskId).on("focus", function(){
+        lastFocus = $(this);
+        $('#deleteTask').removeAttr("disabled");
+        $('#saveTask').removeAttr("disabled");
+    });
+
+    $(newTaskId).text(text);
+}
+
+$(function($){
+
+
     $(document).ready(function(){
 
         $('#deleteTask').click(function(){
@@ -54,34 +101,17 @@ jQuery(function($){
         $('#saveTask').click(function(){
 
             if(lastFocus!=null){
-                asyncSave(lastFocus);
+                postTask(lastFocus);
             }
 
         });
 
 
-        $('#addTask').click(function() {
-            $('body').append("<div tabindex=\"-1\" class=\"task\" id=\"task"+ ++initalTaskId + "\"></div>");
+        $('#addTask').click();
 
-            //Add events to task
-            var newTaskId = "#task"+initalTaskId;
-            $(newTaskId).on("click", function(){
-               // $(this).text("id="+this.id);
-                $(this).focus();
-            });
+        getMyTasks();
 
-            $(newTaskId).draggable();
 
-            $(newTaskId).on("focus", function(){
-                lastFocus = $(this);
-                $('#deleteTask').removeAttr("disabled");
-                $('#saveTask').removeAttr("disabled");
-            });
-
-            /*$(newTaskId).on("focusout", function(){
-                $('#deleteTask').attr("disabled", true);
-            });*/
-        });
     });
 
     $(document).keydown(function(e){
@@ -94,5 +124,7 @@ jQuery(function($){
         }
 
     });
+
+
 
 });
