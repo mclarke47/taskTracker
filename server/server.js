@@ -34,6 +34,14 @@ app.get('/taskTracker/v1/me/tasks', jsonParser,  function (req, res) {
     res.send( JSON.stringify([tempTask, tempTask1, tempTask2]))
 });
 
+app.delete('/taskTracker/v1/task', jsonParser,  function (req, res) {
+    if (!req.body) return res.sendStatus(400);
+
+    //no idea to properly delete yet
+    console.log("Task deleted");
+    res.send("task deleted")
+});
+
 var server = app.listen(port, function () {
 
     var host = server.address().address;

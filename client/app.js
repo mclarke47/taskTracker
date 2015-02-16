@@ -43,6 +43,21 @@ function postTask(lastFocus) {
     });
 }
 
+function deleteTask() {
+
+    $.ajax({
+        type: 'DELETE',
+        contentType: 'application/json',
+        url: taskPostEndpoint,
+        success: function(data) {
+            console.log(JSON.stringify(data));
+            lastFocus.remove();
+            $('#deleteTask').attr("disabled", true);
+        }
+    });
+
+}
+
 function getMyTasks() {
 
     $.ajax({
@@ -92,8 +107,7 @@ $(function($){
         $('#deleteTask').click(function(){
 
             if(lastFocus!=null){
-                lastFocus.remove();
-                $('#deleteTask').attr("disabled", true);
+                deleteTask();
             }
 
         });
