@@ -21,7 +21,6 @@ function editTaskText(keyCode, existing) {
             return existing = existing + String.fromCharCode(keyCode);
         break;
     }
-
 }
 function postTask(lastFocus) {
 
@@ -43,10 +42,14 @@ function postTask(lastFocus) {
     });
 }
 
-function deleteTask() {
+function deleteTask(lastFocus) {
+
+    var data = {};
+    data.taskText = lastFocus.context.innerText;
 
     $.ajax({
         type: 'DELETE',
+        data: JSON.stringify(data),
         contentType: 'application/json',
         url: taskPostEndpoint,
         success: function(data) {
@@ -55,7 +58,6 @@ function deleteTask() {
             $('#deleteTask').attr("disabled", true);
         }
     });
-
 }
 
 function getMyTasks() {
@@ -105,26 +107,20 @@ $(function($){
     $(document).ready(function(){
 
         $('#deleteTask').click(function(){
-
             if(lastFocus!=null){
-                deleteTask();
+                deleteTask(lastFocus);
             }
-
         });
 
         $('#saveTask').click(function(){
-
             if(lastFocus!=null){
                 postTask(lastFocus);
             }
-
         });
 
-
-        $('#addTask').click();
+        $('#addTask').click(function(){addTask("")});
 
         getMyTasks();
-
 
     });
 
@@ -138,7 +134,4 @@ $(function($){
         }
 
     });
-
-
-
 });

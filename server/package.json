@@ -1,0 +1,25 @@
+{
+  "name": "taskTracker",
+  "version": "1.0.0",
+  "description": "taskTracker\r ===========",
+  "main": "server.js",
+  "scripts": {
+    "test": "exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mclarke47/taskTracker.git"
+  },
+  "dependencies": {
+    "express": "4.2.x",
+    "body-parser": "1.12.0",
+    "cors": "2.5.3",
+    "mongoose": "3.8.23"
+  },
+  "author": "Matthew Clarke",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mclarke47/taskTracker/issues"
+  },
+  "homepage": "https://github.com/mclarke47/taskTracker"
+}
