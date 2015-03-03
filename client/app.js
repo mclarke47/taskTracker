@@ -82,7 +82,7 @@ function getMyTasks() {
 }
 
 function addTask(text) {
-    $('body').append("<div tabindex=\"-1\" class=\"task\" id=\"task"+ ++initalTaskId + "\"></div>");
+    $("#dashboard").append("<div tabindex=\"-1\" class=\"task\" id=\"task"+ ++initalTaskId + "\"></div>");
 
     //Add events to task
     var newTaskId = "#task"+initalTaskId;
@@ -90,7 +90,7 @@ function addTask(text) {
         $(this).focus();
     });
 
-    $(newTaskId).draggable();
+    $(newTaskId).draggable({ containment: "parent"  }).resizable({ animate: true  });
 
     $(newTaskId).on("focus", function(){
         lastFocus = $(this);
